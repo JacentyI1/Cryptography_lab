@@ -71,7 +71,7 @@ public class sBlockOp {
         for(int i=0; i<a.size() ; i++){
             Integer temp2 = a.get(i) ^ b.get(i);
             temp.set(i, temp2);
-            System.out.println(i);
+//            System.out.println(i);
         }
         System.out.println("Temp: "+temp);
 
