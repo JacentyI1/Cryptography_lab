@@ -42,9 +42,7 @@ public class sBlockOp {
             }
             sBlockFunctions.put(argument, function);
         }
-//        System.out.println(sBlockFunctions);
-        displayHashMapMessage(sBlockFunctions, "S-box functions:");
-        // deleteArray()
+//        displayHashMapMessage(sBlockFunctions, "S-box functions:");
         return sBlockFunctions;
     }
 
@@ -61,6 +59,42 @@ public class sBlockOp {
         return distance;
     }
 
+    /**
+     * @param a : first function
+     * @param b : second function
+     *          This method computes the XOR of 2 functions.
+     * */
+    public static ArrayList<Integer> doXOR(ArrayList<Integer> a, ArrayList<Integer> b){
+        var temp = new ArrayList<Integer>();
+        a = fixSize(a, b);
+        temp = fixSize(a,b);
+        for(int i=0; i<a.size() ; i++){
+            Integer temp2 = a.get(i) ^ b.get(i);
+            temp.set(i, temp2);
+            System.out.println(i);
+        }
+        System.out.println("Temp: "+temp);
+
+        return temp;
+    }
+    /**
+     * Fixing the sizes of arrays, to be the same size.
+     * */
+    private static ArrayList<Integer> fixSize(ArrayList<Integer> a, ArrayList<Integer> b) {
+        if(a.size() == 0 && b.size() > 0){
+            a = fill(a, b.size(), 0);
+        }else if(b.size() == 0 && a.size() > 0){
+            b = fill(b, a.size(), 0);
+        }
+        return a;
+    }
+
+    public static ArrayList<Integer> fill(ArrayList<Integer> a, int size, int value){
+        for(int i=0; i<size; i++){
+            a.add(i,value);
+        }
+        return a;
+    }
 
     /**
      * Creates an ArrayList of Integers from 0 to 255.
@@ -93,14 +127,22 @@ public class sBlockOp {
                     indexList.add(index);
                 }
             }   // Here I should have an array of maximum 8 indexes
-//            var temp;
-            for(Integer key: indexList){
-//                XOR'y
-                System.out.println("");
+            ArrayList<Integer> temp = new ArrayList<>();
+            for(Integer key : indexList){
+                temp = doXOR(
+                        linFun.get(key),
+                        temp
+                );
+//                System.out.print("linfun: "+linFun.get(key));
             }
+            linFunGroup.put(i, temp);
+            System.out.println("temp genLinearFun"+temp);
+
+//            linFunGroup.put(i, temp);
+
             // adding the computed function HashMap
         }
-        return linFun;
+        return linFunGroup;
     }
 
 
