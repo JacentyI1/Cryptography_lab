@@ -20,6 +20,7 @@ public class FileOp {
                 container.add(byt);
                 counter ++;
             }
+            System.out.println("Read data:");
             System.out.println(container);
 //            System.out.println("counter:"+ counter);
             read.close();
