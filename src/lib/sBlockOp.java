@@ -136,7 +136,7 @@ public class sBlockOp {
 //                System.out.print("linfun: "+linFun.get(key));
             }
             linFunGroup.put(i, temp);
-            System.out.println("temp genLinearFun"+temp);
+            System.out.println("temp genLinearFun"+i+": "+temp);
 
 //            linFunGroup.put(i, temp);
 
