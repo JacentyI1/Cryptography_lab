@@ -25,14 +25,13 @@ public class sBlockOp {
     /** extractFun
      *
      * @param values    : values from s-block
-     * @param numberOf  : number of functions to extract from array
      * @return          : function from s-block
      * Extracts specified functions from s-block values.
      * Ex. if s-block has 8b entrances, then there will be 8 functions
      */
-    public static HashMap<Integer,ArrayList<Integer>> extractFun(ArrayList<Integer> values, int numberOf){
+    public static HashMap<Integer,ArrayList<Integer>> extractFun(ArrayList<Integer> values){
         HashMap<Integer, ArrayList<Integer>> sBlockFunctions = new HashMap<>(); // return
-        for(int argument=0; argument<numberOf; argument++){
+        for(int argument=0; argument< values.size(); argument++){
             ArrayList<Integer> function = new ArrayList<>(); // each function
             int mask = 0b1 << (argument);
             for (Integer val : values) {
@@ -60,40 +59,55 @@ public class sBlockOp {
     }
 
     /**
+     * @param list - ArrayList that represents a function
+     *
+     * getBalance returns the number of '1' in the arraylist.
+     * */
+    public static void getBalance(HashMap<Integer, ArrayList<Integer>> list){
+
+
+        for (Integer fun: list.keySet()) {
+            int counter =0;
+            for (Integer bit : list.get(fun)){
+                if(bit==1) counter++;
+            }
+            if(counter != 128) System.out.println("Function "+fun+": "+counter);    //ToDo: Write try catch
+        }
+    }
+
+    /**
      * @param a : first function
      * @param b : second function
      *          This method computes the XOR of 2 functions.
      * */
     public static ArrayList<Integer> doXOR(ArrayList<Integer> a, ArrayList<Integer> b){
-        var temp = new ArrayList<Integer>();
-        a = fixSize(a, b);
+        ArrayList<Integer> temp = new ArrayList<Integer>();
         temp = fixSize(a,b);
         for(int i=0; i<a.size() ; i++){
             Integer temp2 = a.get(i) ^ b.get(i);
             temp.set(i, temp2);
 //            System.out.println(i);
         }
-        System.out.println("Temp: "+temp);
-
+//        System.out.println("Temp: "+temp);
         return temp;
     }
-    /**
-     * Fixing the sizes of arrays, to be the same size.
+    /**@param a : first array
+     * @param b : second array
+     * Increasing the size of the shorter array to match the larger one.
      * */
     private static ArrayList<Integer> fixSize(ArrayList<Integer> a, ArrayList<Integer> b) {
         if(a.size() == 0 && b.size() > 0){
-            a = fill(a, b.size(), 0);
+            fill(a, b.size(), 0);
         }else if(b.size() == 0 && a.size() > 0){
-            b = fill(b, a.size(), 0);
+            fill(b, a.size(), 0);
         }
         return a;
     }
 
-    public static ArrayList<Integer> fill(ArrayList<Integer> a, int size, int value){
+    public static void fill(ArrayList<Integer> a, int size, int value){
         for(int i=0; i<size; i++){
             a.add(i,value);
         }
-        return a;
     }
 
     /**
@@ -108,45 +122,50 @@ public class sBlockOp {
     }
 
     /**
-     *
+     * @param values : basic linear 256b functions
+     * Generates 8 basic 256b linear functions.
      * */
     public static HashMap<Integer, ArrayList<Integer>> genLinearFun(ArrayList<Integer> values){
-        HashMap<Integer, ArrayList<Integer>> linFun = extractFun(values, 8);    // 8 basic linear functions
-
+        HashMap<Integer, ArrayList<Integer>> linFun = extractFun(values);    // 8 basic linear functions
         displayHashMapMessage(linFun, "Linear functions:");
-
         HashMap<Integer, ArrayList<Integer>> linFunGroup = new HashMap<>();
         ArrayList<Integer> fun = new ArrayList<>();
-
-        for(int i=0; i<256; i++){                       // all the possible combinations of the keys
-
-            ArrayList<Integer> indexList = new ArrayList<>();   // list of functions indexes (8 elements)
-            int index=0;
-            for(int mask = 0b1; mask<256; mask<<=1, index++){   // for loop for getting the indexes
-                if((i&mask) != 0) {
-                    indexList.add(index);
-                }
-            }   // Here I should have an array of maximum 8 indexes
+        for(int i=1; i<256; i++){                       // all the possible combinations of the keys
+            ArrayList<Integer> i_list = new ArrayList<>();   // list of functions indexes (8 elements)
+            indexList(i, i_list);
             ArrayList<Integer> temp = new ArrayList<>();
-            for(Integer key : indexList){
-                temp = doXOR(
-                        linFun.get(key),
-                        temp
-                );
-//                System.out.print("linfun: "+linFun.get(key));
-            }
-            linFunGroup.put(i, temp);
-            System.out.println("temp genLinearFun"+i+": "+temp);
-
-//            linFunGroup.put(i, temp);
-
-            // adding the computed function HashMap
+            putLinFun(linFun, linFunGroup, i, i_list, temp);
         }
         return linFunGroup;
     }
 
-
     /**
+     * @param linFun - The 8 standard linear functions.
+     * @param i - variation of the linear functions in XOR operation between them
+     * @param i_list - i turned into bit array for easier usage
+     * @param linFunGroup - a group of linear function
+     * @param temp - temporary array
+     * */
+    private static void putLinFun(HashMap<Integer, ArrayList<Integer>> linFun, HashMap<Integer, ArrayList<Integer>> linFunGroup, int i, ArrayList<Integer> i_list, ArrayList<Integer> temp) {
+        for(Integer key : i_list){
+            temp = doXOR(linFun.get(key), temp);
+        }
+        linFunGroup.put(i, temp);
+        System.out.println("Linear function nr "+i+": "+temp);
+        System.out.println("Linear function nr " + i + ": " + Integer.toBinaryString(i));
+    }
+
+    private static void indexList(int i, ArrayList<Integer> i_list) {
+        int index=0;
+        for(int mask = 0b1; mask<256; mask<<=1, index++){   // for loop for getting the indexes
+            if((i &mask) != 0) {
+                i_list.add(index);
+            }
+        }   // Here I should have an array of maximum 8 indexes
+    }
+
+
+    /**=============DISPLAY=======================
      * @param message   : message to be displayed in the terminal
      * @param fun       : HashMap values to be displayed
      * */
