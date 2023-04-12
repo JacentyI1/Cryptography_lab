@@ -2,6 +2,7 @@ package lib;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
 
@@ -24,11 +25,20 @@ public class FileOp {
                 container.add(byt);
                 counter ++;
             }
-            System.out.println("Read data:");
-            System.out.println(container);
             read.close();
         }catch(IOException e){
             e.printStackTrace();
         }
+    }
+
+    public void writeToFile(String data) {
+        try {
+            FileWriter writer = new FileWriter("src/res/outcome.txt");
+            writer.write(data);
+            writer.close();
+        }catch(IOException e){
+            e.printStackTrace();
+        }
+
     }
 }
