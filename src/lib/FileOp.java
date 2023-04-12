@@ -39,6 +39,14 @@ public class FileOp {
         }catch(IOException e){
             e.printStackTrace();
         }
-
+    }
+    public void appendToFile(String data) {
+        try {
+            FileWriter writer = new FileWriter("src/res/outcome.txt");
+            writer.append(data);
+            writer.close();
+        }catch(IOException e){
+            e.printStackTrace();
+        }
     }
 }

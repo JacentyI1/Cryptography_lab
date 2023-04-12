@@ -16,8 +16,8 @@ public class Operations {
     HashMap<Integer, ArrayList<Integer>> base_lin;
     ArrayList<Integer> sbox_values;
     ArrayList<Integer> linear_values;
-    Integer NL;
-    Double SAC;
+    ArrayList<Integer> NL;
+    HashMap<Integer, ArrayList<Double>> SAC;
     Integer XOR_block;
     /**
      * <h3>Constructor</h3>
@@ -32,8 +32,8 @@ public class Operations {
         this.base_lin = new HashMap<>();
         this.sbox_values = new ArrayList<>();
         this.linear_values = new ArrayList<>();
-        this.NL = 0;
-        this.SAC = 100.00;
+        this.NL = new ArrayList<>();
+        this.SAC = new HashMap<>();
         this.XOR_block = 2;
     }
 
@@ -124,10 +124,9 @@ public class Operations {
         }
         ArrayList<Integer> ones = new ArrayList<>();
         fillWith(ones, 1);
-        this.displayHashMap(lin_functions,"Linear functions 255:");
+//        this.displayHashMap(lin_functions,"Linear functions 255:");
         for(int key =256; key<511; key++){
             lin_functions.put(key, doXorHm(lin_functions, ones, key-255));
-
         }
     }
     /**
@@ -144,6 +143,52 @@ public class Operations {
      * Fills an array with 256 same values.
      * */
     private void fillWith(ArrayList<Integer> temp, int i) {
-        for (int j = 0; j < 256; j++) temp.add(i);
+        if(temp.size()==0)
+            for (int j = 0; j < 256; j++) temp.add(i);
+        else if(temp.size()==256)
+            for (int j = 0; j < 256; j++) temp.set(j, i);
+    }
+
+    public void computeHamming() {
+        for(Integer fun_key : sbox_functions.keySet()){
+            ArrayList<Integer> distance = new ArrayList<>();
+            for(Integer key : lin_functions.keySet()){
+                ArrayList<Integer> ones = new ArrayList<>();
+                fillWith(ones, 0);
+                distance.add(countOnes(doXorHm(sbox_functions, lin_functions.get(key), fun_key)));
+            }
+            this.NL.add(getMin(distance));
+        }
+        System.out.println(this.NL);
+    }
+
+    private Integer getMin(ArrayList<Integer> distance) {
+        int comparator = distance.get(0);
+        for(int i=1; i<distance.size()-1; i++){
+            if(comparator > distance.get(i)) comparator = distance.get(i);
+        }
+        return comparator;
+    }
+
+    private int countOnes(ArrayList<Integer> arr) {
+        int counter = 0;
+        for(int i=0; i<arr.size(); i++){
+            if(arr.get(i) == 1) counter++;
+        }
+        return counter;
+    }
+
+    public void computeSAC() {
+        ArrayList<Integer> compare = new ArrayList<>();
+        fillWith(compare, 0);
+        int temp_bit=0;
+        for(Integer key : sbox_functions.keySet()){
+            temp_bit =0;
+            for(int i=0; i<8; i++){
+                for(int j=0; j<sbox_functions.get(key).size() - (int)Math.pow(2.00, (double)i); j++){
+
+                }
+            }
+        }
     }
 }
