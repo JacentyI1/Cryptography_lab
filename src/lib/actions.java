@@ -45,8 +45,9 @@ public interface actions {
         /*Create a set of 255 affine functions based on the 8 generated.*/
         sBox.genSet();
         sBox.checkBalance(sBox.lin_functions);
-        sBox.negBase();
-//        sBox.displayHashMap(sBox.lin_functions,"These are generated linear functions:");
+//        sBox.negBase();
+//        sBox.checkBalance(sBox.lin_functions);
+        sBox.displayHashMap(sBox.lin_functions,"These are generated linear functions:");
 
         /*Repeat but with negated functions and append it to the previous set.*/
 //        sBox.getNeg();

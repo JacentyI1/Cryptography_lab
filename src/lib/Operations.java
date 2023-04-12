@@ -14,7 +14,7 @@ public class Operations {
     HashMap<Integer, ArrayList<Integer>> sbox_functions;
     HashMap<Integer, ArrayList<Integer>> lin_functions;
     HashMap<Integer, ArrayList<Integer>> base_lin;
-    HashMap<Integer, ArrayList<Integer>> base_lin_opp;
+//    HashMap<Integer, ArrayList<Integer>> base_lin_opp;
     ArrayList<Integer> sbox_values;
     ArrayList<Integer> linear_values;
     Integer NL;
@@ -31,7 +31,7 @@ public class Operations {
         this.sbox_functions = new HashMap<>();
         this.lin_functions = new HashMap<>();
         this.base_lin = new HashMap<>();
-        this.base_lin_opp = new HashMap<>();
+//        this.base_lin_opp = new HashMap<>();
         this.sbox_values = new ArrayList<>();
         this.linear_values = new ArrayList<>();
         this.NL = 0;
@@ -154,15 +154,19 @@ public class Operations {
             }
             lin_functions.put(i, temp);
         }
-        for(Integer key : lin_functions.keySet()){
-            ArrayList<Integer> ones = new ArrayList<>();
-            fillWith(ones, 1);
+        ArrayList<Integer> ones = new ArrayList<>();
+        fillWith(ones, 1);
+        this.displayHashMap(lin_functions,"Linear functions 255:");
+        for(int key =256; key<511; key++){
+            lin_functions.put(key, doXorHm(lin_functions, ones, key-255));
+
         }
     }
     /**
      * Does XOR operation on Hashmap functions.
      * */
     private ArrayList<Integer> doXorHm(HashMap<Integer, ArrayList<Integer>> base, ArrayList<Integer> temp, int j) {
+//        if(base.get(j).size()!=temp.size()) System.out.println("Error! Different sizes!");
         ArrayList<Integer> temp2 = new ArrayList<>();
         for(int i =0; i< base.get(j).size(); i++){
             temp2.add(temp.get(i) ^ base.get(j).get(i));
@@ -176,7 +180,7 @@ public class Operations {
         for(int j=0;j<256;j++) temp.add(i);
     }
 
-    public void negBase() {
+    /*public void negBase() {
         ArrayList<Integer> ones = new ArrayList<>();
         fillWith(ones, 1);
 //        System.out.println(ones);
@@ -184,7 +188,7 @@ public class Operations {
             base_lin_opp.put(i, doXorHm(base_lin, ones, i));
         }
         this.displayHashMap(base_lin_opp, "base_lin_opp:");
-    }
+    }*/
 }
 
 /*
