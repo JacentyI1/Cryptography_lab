@@ -37,6 +37,7 @@ public interface actions {
         file.writeToFile("Nonlinearity:\n"+String.valueOf(sBox.NL));
 
         /*Computing SAC*/
-//        sBox.computeSAC();
+        sBox.computeSAC();
+        sBox.displaySAC(sBox.SAC, "SAC results:");
     }
 }

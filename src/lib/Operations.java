@@ -48,6 +48,16 @@ public class Operations {
         }
     }
     /**
+     * @param message - message to be displayed in the terminal
+     * */
+    void displaySAC(HashMap<Integer, ArrayList<Double>> param,String message) {
+        System.out.println(message);
+        for(Integer val: param.keySet()){
+            System.out.print(val + ": ");
+            System.out.println(param.get(val));
+        }
+    }
+    /**
      * This function gets rid of the '0x00' in the sBox.
      * */
     public void extractVal(ArrayList<Integer> file_data) {
@@ -180,15 +190,19 @@ public class Operations {
 
     public void computeSAC() {
         ArrayList<Integer> compare = new ArrayList<>();
-        fillWith(compare, 0);
-        int temp_bit=0;
         for(Integer key : sbox_functions.keySet()){
-            temp_bit =0;
+            ArrayList<Double> sac_result  = new ArrayList<>();
             for(int i=0; i<8; i++){
-                for(int j=0; j<sbox_functions.get(key).size() - (int)Math.pow(2.00, (double)i); j++){
-
+                fillWith(compare, 0);
+                int next_index = (int)Math.pow(2.00, (double)i);
+                for(int j=0; j<sbox_functions.get(key).size() - next_index; j += next_index*2){
+                    compare.set(j, sbox_functions.get(key).get(j+next_index));
+                    compare.set(j+next_index, sbox_functions.get(key).get(j));
                 }
+                ArrayList<Integer> result = doXorHm(sbox_functions, compare, i);
+                sac_result.add((double)countOnes(result)/256.00*100.00);
             }
+            SAC.put(key, sac_result);
         }
     }
 }
