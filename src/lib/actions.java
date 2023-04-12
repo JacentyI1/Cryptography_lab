@@ -34,7 +34,7 @@ public interface actions {
         /*Create a set of 255 affine functions based on the 8 generated.*/
         sBox.genSet();
         sBox.computeHamming();
-        file.writeToFile("Nonlinearity:\n"+String.valueOf(sBox.NL));
+        System.out.println("Linearity: \n"+sBox.NL);
 
         /*Computing SAC*/
         sBox.computeSAC();

@@ -1,9 +1,6 @@
 package lib;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 
 public class FileOp {
@@ -40,10 +37,10 @@ public class FileOp {
             e.printStackTrace();
         }
     }
-    public void appendToFile(String data) {
+    public void appendToFile(String input) {
         try {
             FileWriter writer = new FileWriter("src/res/outcome.txt");
-            writer.append(data);
+            writer.append(input);
             writer.close();
         }catch(IOException e){
             e.printStackTrace();

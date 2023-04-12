@@ -1,5 +1,6 @@
 package lib;
 
+import java.text.DecimalFormat;
 import java.util.*;
 
 public class Operations {
@@ -18,7 +19,7 @@ public class Operations {
     ArrayList<Integer> linear_values;
     ArrayList<Integer> NL;
     HashMap<Integer, ArrayList<Double>> SAC;
-    Integer XOR_block;
+    ArrayList<ArrayList<Integer>> XOR_block;
     /**
      * <h3>Constructor</h3>
      * Initiating each of the parameters.<br>
@@ -34,7 +35,7 @@ public class Operations {
         this.linear_values = new ArrayList<>();
         this.NL = new ArrayList<>();
         this.SAC = new HashMap<>();
-        this.XOR_block = 2;
+        this.XOR_block = new ArrayList<>();
     }
 
     /**
@@ -52,9 +53,23 @@ public class Operations {
      * */
     void displaySAC(HashMap<Integer, ArrayList<Double>> param,String message) {
         System.out.println(message);
-        for(Integer val: param.keySet()){
-            System.out.print(val + ": ");
-            System.out.println(param.get(val));
+        DecimalFormat df = new DecimalFormat("#0.00");
+        for(Integer key: param.keySet()){
+            System.out.print("Function "+key+": [ ");
+            for(Double val : param.get(key)){
+                System.out.print(df.format(val)+"%; ");
+            }
+            System.out.println("]");
+        }
+    }
+    /**
+     * Displays the rate of non-linearity of S-Box functions.
+     * */
+    void displayNonLinearity(ArrayList<Double> arr){
+        DecimalFormat df = new DecimalFormat("#,##0.00");
+        for(Double val : arr){
+            String formatedValue = df.format(val);
+            System.out.print(formatedValue);
         }
     }
     /**
@@ -158,7 +173,9 @@ public class Operations {
         else if(temp.size()==256)
             for (int j = 0; j < 256; j++) temp.set(j, i);
     }
-
+    /**
+     * Computing the Hamming distance by XORing the S-Box functions and the generated affine functions from @method genSet()
+     * */
     public void computeHamming() {
         for(Integer fun_key : sbox_functions.keySet()){
             ArrayList<Integer> distance = new ArrayList<>();
@@ -169,9 +186,10 @@ public class Operations {
             }
             this.NL.add(getMin(distance));
         }
-        System.out.println(this.NL);
     }
-
+    /**
+     * Returns the minimal value of specified ArrayList of Integers.
+     * */
     private Integer getMin(ArrayList<Integer> distance) {
         int comparator = distance.get(0);
         for(int i=1; i<distance.size()-1; i++){
@@ -179,7 +197,9 @@ public class Operations {
         }
         return comparator;
     }
-
+    /**
+     * Counts the number of '1' (bits) in the specified ArrayList.
+     * */
     private int countOnes(ArrayList<Integer> arr) {
         int counter = 0;
         for(int i=0; i<arr.size(); i++){
@@ -187,7 +207,10 @@ public class Operations {
         }
         return counter;
     }
-
+    /**
+     * Computes the strict avalanche criterion for every function from S-Box.
+     * Returns a HashMap of Double ArrayLists as well as sets the SAC parameter's values.
+     * */
     public void computeSAC() {
         ArrayList<Integer> compare = new ArrayList<>();
         for(Integer key : sbox_functions.keySet()){
@@ -200,9 +223,25 @@ public class Operations {
                     compare.set(j+next_index, sbox_functions.get(key).get(j));
                 }
                 ArrayList<Integer> result = doXorHm(sbox_functions, compare, i);
-                sac_result.add((double)countOnes(result)/256.00*100.00);
+                double input = (double)countOnes(result)/256.00*100.00;
+                sac_result.add(input);
             }
             SAC.put(key, sac_result);
+        }
+    }
+    /**
+     * Computes XOR-block values for the S-Block.
+     * */
+    public void computeXORblock() {
+        int input1;
+        int input2;
+        int output1;
+        int output2;
+        for(input1=0; input1 < 256; input1++){
+            output1 = sbox_values.get(input1);
+            for(input2=0; input2 < 256; input2++){
+                output2 = sbox_values.get(input2);
+            }
         }
     }
 }
