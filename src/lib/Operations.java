@@ -14,7 +14,6 @@ public class Operations {
     HashMap<Integer, ArrayList<Integer>> sbox_functions;
     HashMap<Integer, ArrayList<Integer>> lin_functions;
     HashMap<Integer, ArrayList<Integer>> base_lin;
-//    HashMap<Integer, ArrayList<Integer>> base_lin_opp;
     ArrayList<Integer> sbox_values;
     ArrayList<Integer> linear_values;
     Integer NL;
@@ -31,7 +30,6 @@ public class Operations {
         this.sbox_functions = new HashMap<>();
         this.lin_functions = new HashMap<>();
         this.base_lin = new HashMap<>();
-//        this.base_lin_opp = new HashMap<>();
         this.sbox_values = new ArrayList<>();
         this.linear_values = new ArrayList<>();
         this.NL = 0;
@@ -50,27 +48,6 @@ public class Operations {
         }
     }
     /**
-     * @param message - message to be displayed in the terminal
-     * */
-    void displayBaseFunctions(String message) {
-        System.out.println(message);
-        for(Integer val: this.base_lin.keySet()){
-            System.out.print(val + ": ");
-            System.out.println(this.base_lin.get(val));
-        }
-    }
-    /**
-     * @param message - message to be displayed in the terminal
-     * */
-    void displayLinFunctions(String message) {
-        System.out.println(message);
-        for(Integer val: this.lin_functions.keySet()){
-            System.out.print(val + ": ");
-            System.out.println(this.lin_functions.get(val));
-        }
-    }
-
-    /**
      * This function gets rid of the '0x00' in the sBox.
      * */
     public void extractVal(ArrayList<Integer> file_data) {
@@ -78,7 +55,6 @@ public class Operations {
             this.sbox_values.add(file_data.get(i));
         }
     }
-
     /**
      * Extracting boolean function from the sBox values.
      * It is done by using a mask to separate specific bits of the S-Box values and then appending them into the array creating a boolean function.
@@ -110,7 +86,6 @@ public class Operations {
             base_lin.put(i, function);
         }
     }
-
     /**
      * Generates a set of affine functions.
      * */
@@ -138,19 +113,12 @@ public class Operations {
         for(int i = 1; i<256; i++){
             ArrayList<Integer> temp = new ArrayList<>();
             fillWith(temp, 0);
-
             for(int j=0; j<8; j++){
                 int mask = 0b1 << j;
-//                System.out.println("mask: "+mask);
                 int use_function = (i & mask) >> j;
-//                System.out.println("Fun :" + i);
-//                System.out.println("Fun "+i+". Use function: " + use_function);
                 if(use_function==1){
-//                    System.out.println("j: "+ j);
                     temp = doXorHm(this.base_lin, temp, j);
-//                    System.out.println("Check1: "+temp);
                 }
-//                System.out.println("Check2: "+temp);
             }
             lin_functions.put(i, temp);
         }
@@ -166,7 +134,6 @@ public class Operations {
      * Does XOR operation on Hashmap functions.
      * */
     private ArrayList<Integer> doXorHm(HashMap<Integer, ArrayList<Integer>> base, ArrayList<Integer> temp, int j) {
-//        if(base.get(j).size()!=temp.size()) System.out.println("Error! Different sizes!");
         ArrayList<Integer> temp2 = new ArrayList<>();
         for(int i =0; i< base.get(j).size(); i++){
             temp2.add(temp.get(i) ^ base.get(j).get(i));
@@ -177,18 +144,8 @@ public class Operations {
      * Fills an array with 256 same values.
      * */
     private void fillWith(ArrayList<Integer> temp, int i) {
-        for(int j=0;j<256;j++) temp.add(i);
+        for (int j = 0; j < 256; j++) temp.add(i);
     }
-
-    /*public void negBase() {
-        ArrayList<Integer> ones = new ArrayList<>();
-        fillWith(ones, 1);
-//        System.out.println(ones);
-        for(int i=0; i<base_lin.size(); i++){
-            base_lin_opp.put(i, doXorHm(base_lin, ones, i));
-        }
-        this.displayHashMap(base_lin_opp, "base_lin_opp:");
-    }*/
 }
 
 /*
