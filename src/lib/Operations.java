@@ -228,11 +228,20 @@ public class Operations {
             }
             SAC.put(key, sac_result);
         }
+        double result = 0.00;
+        for(Integer key : SAC.keySet()){
+            for(Double arr : SAC.get(key)){
+                result += arr;
+            }
+        }
+        result /= 64.00;
+        DecimalFormat df = new DecimalFormat("#0.00");
+        System.out.println("SAC: "+df.format(result));
     }
     /**
      * Computes XOR-block values for the S-Block.
      * */
-    public void computeXORblock() {
+    public void computeXORprofile() {
         int input1;
         int input2;
         int output1;

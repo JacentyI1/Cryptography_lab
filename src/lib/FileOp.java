@@ -28,6 +28,21 @@ public class FileOp {
         }
     }
 
+    public void readSboxFile(ArrayList<Integer> container, String path){
+        try{
+            FileInputStream read = new FileInputStream(path);
+            int byt;
+            int counter=0;
+            while((byt = read.read()) != -1){
+                container.add(byt);
+                counter ++;
+            }
+            read.close();
+        }catch(IOException e){
+            e.printStackTrace();
+        }
+    }
+
     public void writeToFile(String data) {
         try {
             FileWriter writer = new FileWriter("src/res/outcome.txt");

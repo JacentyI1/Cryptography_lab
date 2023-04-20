@@ -1,9 +1,9 @@
 package lib;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.security.Security;
 import java.util.ArrayList;
-import java.util.HashMap;
-
-import static lib.Operations.*;
 
 public interface actions {
     /**
@@ -38,6 +38,7 @@ public interface actions {
 
         /*Computing SAC*/
         sBox.computeSAC();
-        sBox.displaySAC(sBox.SAC, "SAC results:");
+//        sBox.displaySAC(sBox.SAC, "SAC results:");
+
     }
 }

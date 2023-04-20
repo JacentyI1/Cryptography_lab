@@ -1,7 +1,9 @@
-import static lib.actions.testBox;
+import lib.ImageEnc;
 
 public class main {
     public static void main(String[] args){
-        testBox();
+        ImageEnc test = new ImageEnc("src/res/mountins.jpg");
+        test.encrypt();
+//        testBox();
     }
 }
