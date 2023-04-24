@@ -39,6 +39,7 @@ public interface actions {
         /*Computing SAC*/
         sBox.computeSAC();
 //        sBox.displaySAC(sBox.SAC, "SAC results:");
+        sBox.getXORProfileMax(sBox.computeXOProfile());
 
     }
 }

@@ -241,16 +241,30 @@ public class Operations {
     /**
      * Computes XOR-block values for the S-Block.
      * */
-    public void computeXORprofile() {
-        int input1;
-        int input2;
-        int output1;
-        int output2;
-        for(input1=0; input1 < 256; input1++){
-            output1 = sbox_values.get(input1);
-            for(input2=0; input2 < 256; input2++){
-                output2 = sbox_values.get(input2);
+    public int[][] computeXOProfile() {
+        int [][] xorProfile = new int[sbox_values.size()][sbox_values.size()];
+        for(int input1 =0; input1< sbox_values.size(); input1++){
+            for(int input2 =0; input2< sbox_values.size(); input2++){
+                int output1 = sbox_values.get(input1);
+                int output2 = sbox_values.get(input2);
+                int inputXOR = input1 ^ input2;
+                int outputXOR = output1 ^output2;
+                xorProfile[inputXOR][outputXOR]++;
             }
         }
+        return xorProfile;
+    }
+    public int getXORProfileMax(int[][] xorProfile){
+        int maximum=0;
+        for(int i=0; i<xorProfile.length; i++){
+            for(int j =0; j<xorProfile[i].length-1; j++){
+                int temp = Math.max(xorProfile[i][j],xorProfile[i][j+1]);
+                if(temp>maximum && temp!=256) maximum = temp;
+//                System.out.print(xorProfile[i][j]+" ");
+            }
+//            System.out.println("");
+        }
+        System.out.println("Xor Profile max:" + maximum);
+        return maximum;
     }
 }
